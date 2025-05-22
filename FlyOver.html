@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fly-Over Video</title>
+    <style>
+        body {
+            background-color: #F5F5F5;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #e0f7fa;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: left;
+        }
+
+        .info-box ul li {
+            margin-bottom: 10px;
+        }
+
+        .separator {
+            border-top: 3px solid #007BFF;
+            width: 80%;
+            margin: 30px auto;
+        }
+
+        a {
+            font-size: 18px;
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Fly-Over Video</h1>
+
+    <div class="video-container">
+        <video width="800" height="800" controls>
+            <source src="fly_sample.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="info-box">
+        <h2>Fly-Over Video Data Sources:</h2>
+        <ul>
+            <li><strong>compos6.img:</strong> Landsat color composite image</li>
+            <li><strong>water10m.tif:</strong> Raster completing the area shown in the Landsat image</li>
+            <li><strong>dem_10m.img:</strong> A 10-meter DEM for the same area</li>
+            <li><strong>nan10m.tif:</strong> A 10-meter air photo of the same area</li>
+        </ul>
+        <h3>Location: France</h3>
+        <h3>Date of Creation: 03/18/2025</h3>
+        <h4>Video created using ArcGIS Pro by Nooshin Meschi</h4>
+    </div>
+
+    
+
+    
+
+</body>
+
+</html>

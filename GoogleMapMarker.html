@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Google Maps JavaScript API v3 Example: Adding Marker</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <!-- Set internal CSS style  -->
+    <style>
+      /* Always set the map height explicitly to define the size of the div element that contains the map.*/
+      #map_canvas {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window.*/
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Add map heading -->
+    <h3>My Google Maps Demo</h3>
+    <!--The div element for the map -->
+    <div id="map_canvas"></div>
+
+    <!-- Specify the location URL and key code for the Google Maps API -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsF1aJmfsIohOhpZkOdQkwvRM-v2PLeuw&callback=initMap&v=weekly"    
+      defer >
+    </script>
+
+    <!-- Generate a Google Map with a designated marker -->
+    <script>
+      // Initialize and add the map
+      function initMap() {
+        // The location of Uluru
+        const position = { lat: 49.15807, lng: -123.96408 };
+        // The map, centered at Uluru
+        map = new google.maps.Map(document.getElementById("map_canvas"), {
+            zoom: 13,
+            center: position,
+            mapTypeId: "hybrid" 
+        });
+        // The marker, positioned at Uluru
+        const marker = new google.maps.Marker({
+            map: map,
+            position: position,
+            title: "Uluru",
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Time-Lapse Temperature Map of Canada</title>
+    <style>
+        body {
+            background-color: #ADD8E6; 
+            text-align: center; 
+            font-family: Arial, sans-serif; 
+        }
+
+        h1, h2, h3, h4 {
+            color: #333; 
+        }
+
+        hr {
+            width: 80%;
+            border: 1px solid #444;
+        }
+
+        .map-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        img {
+            border-radius: 10px; 
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+    </style>
+
+    <script>
+       
+        var images = [];
+        var filenames = [
+            "Jan_1.jpg", "Feb_2.jpg", "Mar_3.jpg", "Ap_4.jpg", "May_5.jpg", "Jun_6.jpg",
+            "Ju_7.jpg", "Au_8.jpg", "Sep_9.jpg", "Oct_10.jpg", "Nov_11.jpg", "Dec_12.jpg"
+        ];
+
+        
+        for (var j = 0; j < filenames.length; j++) {
+            images[j] = new Image(1056, 816);
+            images[j].src = "JavaScriptAnimation/" + filenames[j];  
+            console.log("Loading image: " + images[j].src);  
+        }
+
+        var i = 0;
+        var animation = true;
+        var nbImg = images.length;
+
+        function animate() {
+            if (animation) {
+                document.getElementById("slideshow").src = images[i].src;
+            }
+            i = (i + 1) % nbImg; 
+            setTimeout(animate, 500); 
+        }
+    </script>
+</head>
+
+<body onload="animate();">
+
+    <h1>Map Description</h1>
+    <p><strong>Time-lapse map showing the changes in the mean temperature of Canada over twelve months.</strong></p>
+    
+    <hr>
+
+    <h2>Data & Method</h2>
+    <p>
+        <strong>Data Source:</strong> Meteorological station records <br>
+        <strong>Interpolation:</strong> IDW (Inverse Distance Weighting) <br>
+        <strong>Coordinate System:</strong> Canada Lambert Conformal Conic
+    </p>
+
+    <div class="map-container">
+        <img id="slideshow" src="" width="1056" height="816">
+    </div>
+
+    <div class="controls">
+        <button onclick="animation = true;">Start</button>
+        <button onclick="animation = false;">Stop</button>
+    </div>
+
+    <footer>
+        <hr>
+        <h3>Cartography: Nooshin Meschi</h3>
+        <h4>Date: 03/19/2025</h4>
+    </footer>
+
+</body>
+</html>
