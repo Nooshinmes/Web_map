@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        #map {
+            width: 787px;
+            height: 564px;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/municipalitiesG_0.js"></script>
+        <script src="data/riversG_1.js"></script>
+        <script src="data/roadsG_2.js"></script>
+        <script src="data/lakesG_3.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        L.control.locate().addTo(map);
+        var measureControl = new L.Control.Measure({
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        var basemap0 = L.tileLayer('http://stamen-tiles-a.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}.png', {
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            maxZoom: 28
+        });
+        basemap0.addTo(map);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        function pop_municipalitiesG_0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FID_VanIsl'] !== null ? Autolinker.link(String(feature.properties['FID_VanIsl'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>NAME</strong><br />' + (feature.properties['NAME'] !== null ? Autolinker.link(String(feature.properties['NAME'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PROV'] !== null ? Autolinker.link(String(feature.properties['PROV'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TYPE'] !== null ? Autolinker.link(String(feature.properties['TYPE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['POP96'] !== null ? Autolinker.link(String(feature.properties['POP96'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['POP_SQKM'] !== null ? Autolinker.link(String(feature.properties['POP_SQKM'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['DWELL96'] !== null ? Autolinker.link(String(feature.properties['DWELL96'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SHORE_AREA'] !== null ? Autolinker.link(String(feature.properties['SHORE_AREA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FID_Bounda'] !== null ? Autolinker.link(String(feature.properties['FID_Bounda'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Id'] !== null ? Autolinker.link(String(feature.properties['Id'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['HTTP_URL'] !== null ? Autolinker.link(String(feature.properties['HTTP_URL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(String(feature.properties['Shape_Leng'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? Autolinker.link(String(feature.properties['Shape_Area'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_municipalitiesG_0_0(feature) {
+            switch(String(feature.properties['NAME'])) {
+                case 'CHEMAINUS 13':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(115,234,121,0.4)',
+            }
+                    break;
+                case 'COWICHAN VALLEY, SUBD. A':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(216,216,97,0.4)',
+            }
+                    break;
+                case 'COWICHAN VALLEY, SUBD. B':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(126,143,211,0.4)',
+            }
+                    break;
+                case 'COWICHAN VALLEY, SUBD. D':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(233,140,148,0.4)',
+            }
+                    break;
+                case 'LADYSMITH':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(178,211,117,0.4)',
+            }
+                    break;
+                case 'NANAIMO':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,132,197,0.4)',
+            }
+                    break;
+                case 'NANAIMO RIVER 2':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(14,211,93,0.4)',
+            }
+                    break;
+                case 'NANAIMO RIVER 3':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(228,34,118,0.4)',
+            }
+                    break;
+                case 'NANAIMO RIVER 4':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(155,72,232,0.4)',
+            }
+                    break;
+                case 'NANAIMO TOWN 1':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(86,163,226,0.4)',
+            }
+                    break;
+                case 'NANAIMO, SUBD. A':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(200,107,214,0.4)',
+            }
+                    break;
+                case 'NANAIMO, SUBD. B':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(51,14,240,0.4)',
+            }
+                    break;
+                case 'NANOOSE':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(202,134,16,0.4)',
+            }
+                    break;
+                case 'OYSTER BAY 12':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(41,185,201,0.4)',
+            }
+                    break;
+                case 'PARKSVILLE':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,205,184,0.4)',
+            }
+                    break;
+                case 'QUALICUM BEACH':
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(103,215,55,0.4)',
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_municipalitiesG_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(210,72,18,0.4)',
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_municipalitiesG_0');
+        map.getPane('pane_municipalitiesG_0').style.zIndex = 400;
+        map.getPane('pane_municipalitiesG_0').style['mix-blend-mode'] = 'normal';
+        var layer_municipalitiesG_0 = new L.geoJson(json_municipalitiesG_0, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_municipalitiesG_0',
+            onEachFeature: pop_municipalitiesG_0,
+            style: style_municipalitiesG_0_0,
+        });
+        bounds_group.addLayer(layer_municipalitiesG_0);
+        map.addLayer(layer_municipalitiesG_0);
+        function pop_riversG_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FNODE_'] !== null ? Autolinker.link(String(feature.properties['FNODE_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TNODE_'] !== null ? Autolinker.link(String(feature.properties['TNODE_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LPOLY_'] !== null ? Autolinker.link(String(feature.properties['LPOLY_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RPOLY_'] !== null ? Autolinker.link(String(feature.properties['RPOLY_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>LENGTH</strong><br />' + (feature.properties['LENGTH'] !== null ? Autolinker.link(String(feature.properties['LENGTH'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RIVER0_'] !== null ? Autolinker.link(String(feature.properties['RIVER0_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RIVER0_ID'] !== null ? Autolinker.link(String(feature.properties['RIVER0_ID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(String(feature.properties['Shape_Leng'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_riversG_1_0() {
+            return {
+                pane: 'pane_riversG_1',
+                opacity: 1,
+                color: 'rgba(63,65,191,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_riversG_1');
+        map.getPane('pane_riversG_1').style.zIndex = 401;
+        map.getPane('pane_riversG_1').style['mix-blend-mode'] = 'normal';
+        var layer_riversG_1 = new L.geoJson(json_riversG_1, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_riversG_1',
+            onEachFeature: pop_riversG_1,
+            style: style_riversG_1_0,
+        });
+        bounds_group.addLayer(layer_riversG_1);
+        map.addLayer(layer_riversG_1);
+        function pop_roadsG_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FID_VanIsl'] !== null ? Autolinker.link(String(feature.properties['FID_VanIsl'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>STREET</strong><br />' + (feature.properties['STREET'] !== null ? Autolinker.link(String(feature.properties['STREET'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FROMLEFT'] !== null ? Autolinker.link(String(feature.properties['FROMLEFT'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TOLEFT'] !== null ? Autolinker.link(String(feature.properties['TOLEFT'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FROMRIGHT'] !== null ? Autolinker.link(String(feature.properties['FROMRIGHT'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TORIGHT'] !== null ? Autolinker.link(String(feature.properties['TORIGHT'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PREDIR'] !== null ? Autolinker.link(String(feature.properties['PREDIR'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRETYPE'] !== null ? Autolinker.link(String(feature.properties['PRETYPE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['STREETNAME'] !== null ? Autolinker.link(String(feature.properties['STREETNAME'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SUFTYPE'] !== null ? Autolinker.link(String(feature.properties['SUFTYPE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SUFDIR'] !== null ? Autolinker.link(String(feature.properties['SUFDIR'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CARTO'] !== null ? Autolinker.link(String(feature.properties['CARTO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LEFT_MUN'] !== null ? Autolinker.link(String(feature.properties['LEFT_MUN'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RIGHT_MUN'] !== null ? Autolinker.link(String(feature.properties['RIGHT_MUN'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LEFT_MAF'] !== null ? Autolinker.link(String(feature.properties['LEFT_MAF'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RIGHT_MAF'] !== null ? Autolinker.link(String(feature.properties['RIGHT_MAF'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LEFT_FSA'] !== null ? Autolinker.link(String(feature.properties['LEFT_FSA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RIGHT_FSA'] !== null ? Autolinker.link(String(feature.properties['RIGHT_FSA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LEFT_PRV'] !== null ? Autolinker.link(String(feature.properties['LEFT_PRV'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RIGHT_PRV'] !== null ? Autolinker.link(String(feature.properties['RIGHT_PRV'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['UNIQUEID'] !== null ? Autolinker.link(String(feature.properties['UNIQUEID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FID_Bounda'] !== null ? Autolinker.link(String(feature.properties['FID_Bounda'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Id'] !== null ? Autolinker.link(String(feature.properties['Id'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Shape_Leng</strong><br />' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(String(feature.properties['Shape_Leng'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_roadsG_2_0(feature) {
+            switch(String(feature.properties['SUFTYPE'])) {
+                case 'AVE':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(182,69,230,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'BAY':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(30,89,227,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'BLVD':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(209,110,67,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'BYPASS':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(214,104,92,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'CIR':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(133,87,239,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'CLOSE':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(75,60,205,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'CRES':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(203,189,60,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'CRT':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(209,44,60,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'DR':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(59,164,208,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'EXTEN':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(126,213,187,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'GATE':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(195,230,114,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'HILL':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(17,206,36,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'HWY':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(227,26,28,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'LANE':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(209,78,168,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'LKOUT':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(138,147,228,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'PKY':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(208,45,222,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'PL':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(217,94,131,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'RAMP':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(224,44,134,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'RD':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'RIDGE':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(145,204,86,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'ROW':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(95,158,221,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'RUN':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(209,166,65,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'SQ':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(44,200,91,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'ST':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(124,30,217,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'TERR':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(210,119,28,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'TRAIL':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(116,217,167,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'TRNABT':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(212,26,191,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'VIEW':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(127,234,115,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                case 'WAY':
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(154,235,119,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_roadsG_2',
+                opacity: 1,
+                color: 'rgba(183,200,32,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_roadsG_2');
+        map.getPane('pane_roadsG_2').style.zIndex = 402;
+        map.getPane('pane_roadsG_2').style['mix-blend-mode'] = 'normal';
+        var layer_roadsG_2 = new L.geoJson(json_roadsG_2, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_roadsG_2',
+            onEachFeature: pop_roadsG_2,
+            style: style_roadsG_2_0,
+        });
+        bounds_group.addLayer(layer_roadsG_2);
+        map.addLayer(layer_roadsG_2);
+        function pop_lakesG_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>AREA</strong><br />' + (feature.properties['AREA'] !== null ? Autolinker.link(String(feature.properties['AREA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">PERIMETER</th>\
+                        <td>' + (feature.properties['PERIMETER'] !== null ? Autolinker.link(String(feature.properties['PERIMETER'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LAKES0_'] !== null ? Autolinker.link(String(feature.properties['LAKES0_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LAKES0_ID'] !== null ? Autolinker.link(String(feature.properties['LAKES0_ID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(String(feature.properties['Shape_Leng'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? Autolinker.link(String(feature.properties['Shape_Area'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_lakesG_3_0() {
+            return {
+                pane: 'pane_lakesG_3',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(31,120,180,1.0)',
+            }
+        }
+        map.createPane('pane_lakesG_3');
+        map.getPane('pane_lakesG_3').style.zIndex = 403;
+        map.getPane('pane_lakesG_3').style['mix-blend-mode'] = 'normal';
+        var layer_lakesG_3 = new L.geoJson(json_lakesG_3, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_lakesG_3',
+            onEachFeature: pop_lakesG_3,
+            style: style_lakesG_3_0,
+        });
+        bounds_group.addLayer(layer_lakesG_3);
+        map.addLayer(layer_lakesG_3);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/lakesG_3.png" /> lakesG': layer_lakesG_3,'roadsG<br /><table><tr><td style="text-align: center;"><img src="legend/roadsG_2_AVE0.png" /></td><td>AVE</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_BAY1.png" /></td><td>BAY</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_BLVD2.png" /></td><td>BLVD</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_BYPASS3.png" /></td><td>BYPASS</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_CIR4.png" /></td><td>CIR</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_CLOSE5.png" /></td><td>CLOSE</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_CRES6.png" /></td><td>CRES</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_CRT7.png" /></td><td>CRT</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_DR8.png" /></td><td>DR</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_EXTEN9.png" /></td><td>EXTEN</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_GATE10.png" /></td><td>GATE</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_HILL11.png" /></td><td>HILL</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_HWY12.png" /></td><td>HWY</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_LANE13.png" /></td><td>LANE</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_LKOUT14.png" /></td><td>LKOUT</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_PKY15.png" /></td><td>PKY</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_PL16.png" /></td><td>PL</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_RAMP17.png" /></td><td>RAMP</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_RD18.png" /></td><td>RD</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_RIDGE19.png" /></td><td>RIDGE</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_ROW20.png" /></td><td>ROW</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_RUN21.png" /></td><td>RUN</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_SQ22.png" /></td><td>SQ</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_ST23.png" /></td><td>ST</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_TERR24.png" /></td><td>TERR</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_TRAIL25.png" /></td><td>TRAIL</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_TRNABT26.png" /></td><td>TRNABT</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_VIEW27.png" /></td><td>VIEW</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_WAY28.png" /></td><td>WAY</td></tr><tr><td style="text-align: center;"><img src="legend/roadsG_2_29.png" /></td><td></td></tr></table>': layer_roadsG_2,'<img src="legend/riversG_1.png" /> riversG': layer_riversG_1,'municipalitiesG<br /><table><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_CHEMAINUS130.png" /></td><td>CHEMAINUS 13</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_COWICHANVALLEYSUBDA1.png" /></td><td>COWICHAN VALLEY, SUBD. A</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_COWICHANVALLEYSUBDB2.png" /></td><td>COWICHAN VALLEY, SUBD. B</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_COWICHANVALLEYSUBDD3.png" /></td><td>COWICHAN VALLEY, SUBD. D</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_LADYSMITH4.png" /></td><td>LADYSMITH</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_NANAIMO5.png" /></td><td>NANAIMO</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_NANAIMORIVER26.png" /></td><td>NANAIMO RIVER 2</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_NANAIMORIVER37.png" /></td><td>NANAIMO RIVER 3</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_NANAIMORIVER48.png" /></td><td>NANAIMO RIVER 4</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_NANAIMOTOWN19.png" /></td><td>NANAIMO TOWN 1</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_NANAIMOSUBDA10.png" /></td><td>NANAIMO, SUBD. A</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_NANAIMOSUBDB11.png" /></td><td>NANAIMO, SUBD. B</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_NANOOSE12.png" /></td><td>NANOOSE</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_OYSTERBAY1213.png" /></td><td>OYSTER BAY 12</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_PARKSVILLE14.png" /></td><td>PARKSVILLE</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_QUALICUMBEACH15.png" /></td><td>QUALICUM BEACH</td></tr><tr><td style="text-align: center;"><img src="legend/municipalitiesG_0_16.png" /></td><td></td></tr></table>': layer_municipalitiesG_0,}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
