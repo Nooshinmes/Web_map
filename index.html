@@ -1,19 +1,20 @@
 <html>
-
+<head>
+    <title>Resume Viewer</title>
+</head>
 <body>
 
-<iframe src="ToC.html" name="iframe_a" width="12%" height="1200"></iframe>
+    <iframe src="ToC.html" name="iframe_a" width="12%" height="100%" style="float:left;"></iframe>
+    <iframe src="MyResume.html" name="iframe_b" width="86%" height="100%" style="float:left; overflow:auto;" onload="this.contentWindow.scrollTo(0,0)"></iframe>
 
-<iframe src="MyResume.html" name="iframe_b" width="86%" height="1200"></iframe>
+    <div style="clear:both; padding-top:10px;">
+        <a href="MyResume.html" target="iframe_b">My Resume</a><br>
+        <a href="ImageMap.html" target="iframe_b">Image Map</a><br>
+        <a href="Animation.html" target="iframe_b">Animated Maps</a><br>
+
+    </div>
 
 </body>
-
 </html>
-<a href="MyResume.html" target="iframe_b">My Resume</a><br>
 
-<a href="ImageMap.html" target="iframe_b">Image Map</a><br>
-
-<a href="Animation.html" target="iframe_b">Animated Maps</a><br>
-
-<a href="WebMapServices.html" target="iframe_b">Web Map Services</a><br>
 
