@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Time-Lapse Temperature Map of Canada</title>
     <style>
         body {
-            background-color: #ADD8E6; 
-            text-align: center; 
-            font-family: Arial, sans-serif; 
+            background-color: #ADD8E6; /* Light blue background */
+            text-align: center; /* Center align text */
+            font-family: Arial, sans-serif; /* Better font */
         }
 
         h1, h2, h3, h4 {
-            color: #333; 
+            color: #333; /* Dark gray text */
         }
 
         hr {
@@ -27,8 +27,8 @@
         }
 
         img {
-            border-radius: 10px; 
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); /* Soft shadow */
         }
 
         .controls {
@@ -37,18 +37,17 @@
     </style>
 
     <script>
-       
+        // Array to store image objects
         var images = [];
         var filenames = [
             "Jan_1.jpg", "Feb_2.jpg", "Mar_3.jpg", "Ap_4.jpg", "May_5.jpg", "Jun_6.jpg",
             "Ju_7.jpg", "Au_8.jpg", "Sep_9.jpg", "Oct_10.jpg", "Nov_11.jpg", "Dec_12.jpg"
         ];
 
-        
+        // Load images dynamically
         for (var j = 0; j < filenames.length; j++) {
             images[j] = new Image(1056, 816);
-            images[j].src = "JavaScriptAnimation/" + filenames[j];  
-            console.log("Loading image: " + images[j].src);  
+            images[j].src = "T:\animation\JavaScriptAnimation" + filenames[j];
         }
 
         var i = 0;
@@ -59,13 +58,13 @@
             if (animation) {
                 document.getElementById("slideshow").src = images[i].src;
             }
-            i = (i + 1) % nbImg; 
-            setTimeout(animate, 500); 
+            i = (i + 1) % nbImg; // Loop through images in order
+            setTimeout(animate, 500);
         }
     </script>
 </head>
 
-<body onload="animate();">
+<body onLoad="animate();">
 
     <h1>Map Description</h1>
     <p><strong>Time-lapse map showing the changes in the mean temperature of Canada over twelve months.</strong></p>
@@ -96,3 +95,7 @@
 
 </body>
 </html>
+
+
+
+        
