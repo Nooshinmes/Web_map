@@ -32,22 +32,15 @@
 </head>
 <body>
 
-  <!-- Welcome image fullscreen -->
+
   <div id="welcome"></div>
 
-  <!-- Your website (TOC + iframe) -->
+
   <div id="main">
     <iframe src="ToC.html" name="iframe_a" width="12%" height="100%" style="float:left;"></iframe>
     <iframe src="MyResume.html" name="iframe_b" width="86%" height="100%" style="float:left; overflow:auto;" onload="this.contentWindow.scrollTo(0,0)"></iframe>
   </div>
 
-  <script>
-    // Show image for 3 seconds, then show your site
-    setTimeout(function () {
-      document.getElementById('welcome').style.display = 'none';
-      document.getElementById('main').style.display = 'block';
-    }, 3000); // 3000 ms = 3 seconds
-  </script>
 
 </body>
 </html>
