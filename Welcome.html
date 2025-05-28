@@ -1,52 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Welcome</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+    html, body {
       margin: 0;
       padding: 0;
-      text-align: center;
+      height: 100%;
     }
 
-    .content {
-      margin-top: 100px;
-      padding: 20px;
-    }
-
-    h1 {
-      color: #2E8B57;
-      font-size: 2em;
-    }
-
-    p {
-      font-size: 1.1em;
-      color: #333;
-    }
-
-    .footer {
+    #welcome {
       position: fixed;
-      bottom: 0;
       width: 100%;
-      font-size: 0.7em;
-      background: linear-gradient(to right, #ccc, #b2d8b2);
-      color: #333;
-      text-align: center;
-      padding: 5px 0;
+      height: 100%;
+      background-image: url('1.png');
+      background-size: cover;
+      background-position: center;
+      z-index: 1000;
+    }
+
+    #main {
+      display: none;
+      height: 100%;
+    }
+
+    iframe {
+      border: none;
     }
   </style>
 </head>
 <body>
-  <div class="content">
-    <h1>Welcome to My GIS Web Page!</h1>
-    <p>Please check out my interactive web maps, animations, and visualizations.</p>
+
+  <!-- Welcome image fullscreen -->
+  <div id="welcome"></div>
+
+  <!-- Your website (TOC + iframe) -->
+  <div id="main">
+    <iframe src="ToC.html" name="iframe_a" width="12%" height="100%" style="float:left;"></iframe>
+    <iframe src="MyResume.html" name="iframe_b" width="86%" height="100%" style="float:left; overflow:auto;" onload="this.contentWindow.scrollTo(0,0)"></iframe>
   </div>
 
-  <div class="footer">
-    Created and designed by Nooshin Meschi
-  </div>
+  <script>
+    // Show image for 3 seconds, then show your site
+    setTimeout(function () {
+      document.getElementById('welcome').style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+    }, 3000); // 3000 ms = 3 seconds
+  </script>
+
 </body>
 </html>
